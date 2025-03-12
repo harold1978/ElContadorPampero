@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ElContadorPampero.Models.AsientoContable>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class=" container table-responsive">
+
+    <table class="table table-sm table-hover table-borderless align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Detalle)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NroAsiento)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Detalle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NroAsiento)
+                    </td>
+                    <td class="d-flex gap-2">
+                        <div class="border border-dark p-1 rounded-2">
+                            <a title="Edit" class="btn btn-outline-success btn-sm text-black" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil" style="font-size:1rem"></i></a>
+                            <a title="Details" class="btn btn-outline-info btn-sm text-black" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-body-text"></i></a>
+                            <a title="Delete" class="btn btn-outline-danger btn-sm text-black" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a>
+                        </div>
+                        <div class="border border-dark p-1 rounded-2">
+                            <a title="Movimientos" class="btn btn-outline-primary btn-sm text-black" asp-action="Create" asp-controller="DetalleAsientoContables" asp-route-AsientoId="@item.Id"><i class="bi bi-plus-circle"></i></a>
+                            <a title="Lista Movimientos" class="btn btn-outline-info btn-sm text-black" asp-action="Index" asp-controller="DetalleAsientoContables" asp-route-AsientoId="@item.Id"><i class="bi bi-list-check"></i></a>
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
