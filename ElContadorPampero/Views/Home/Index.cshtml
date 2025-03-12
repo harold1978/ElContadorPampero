@@ -1,8 +1,100 @@
-﻿@{
+﻿@model ElContadorPampero.Models.ViewModels.MayoreoFechas
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1 class="display-4">MAYOREO DE CUENTAS</h1>
+    <form asp-action="Index">
+        <div class="mb-3 row">
+            <label class="col-4 col-form-label">Fecha inicion</label>
+            <div class="col-8">
+                <input asp-for="fi" type="date" class="form-control" />
+
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-4 col-form-label">Fecha Final</label>
+            <div class="col-8">
+                <input asp-for="ff" type="date" class="form-control" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <div class="offset-sm-4 col-sm-8">
+                <button type="submit" class="btn btn-primary">
+                    Generar
+                </button>
+            </div>
+        </div>
+    </form>
+    <br />
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">CODIGO</th>
+                    <th scope="col">NOMBRE</th>
+                    <th scope="col">MOVIMIENTOS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    decimal totalD = 0;
+                    decimal totalH = 0;
+                    decimal saldo = 0;
+                    @foreach (CuentaContable item in ViewBag.mayor != null ? ViewBag.mayor : new List<CuentaContable>())
+                    {
+                        totalD = 0;
+                        totalH = 0;
+                        saldo = 0;
+                        <tr>
+                            <td scope="row">@item.Codigo</td>
+                            <td>@item.Nombre</td>
+                            <td>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">NRO ASIENTO</th>
+                                                <th scope="col">FECHA</th>
+                                                <th scope="col">DETALLE</th>
+                                                <th scope="col">DEBE</th>
+                                                <th scope="col">HABER</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (DetalleAsientoContable item2 in item.DetalleAsientoContables)
+                                            {
+                                                <tr>
+                                                    <td scope="row">@item2.AsientoContable.NroAsiento</td>
+                                                    <td>@item2.AsientoContable.Fecha</td>
+                                                    <td>@item2.AsientoContable.Detalle</td>
+                                                    <td>@(item2.Cargo == "Debe" ? item2.Monto : 0)</td>
+                                                    <td>@(item2.Cargo == "Haber" ? item2.Monto : 0)</td>
+                                                </tr>
+                                                totalD += (item2.Cargo == "Debe" ? item2.Monto : 0);
+                                                totalH += (item2.Cargo == "Haber" ? item2.Monto : 0);
+                                            }
+                                            
+                                            <tr>
+                                                <td class="text-end" colspan="3">TOTALES</td>
+                                                <td>@totalD</td>
+                                                <td >@totalH</td>
+                                            </tr>
+                                            @(saldo = totalD > totalH ? totalD - totalH : totalH - totalD)
+                                            <tr>
+                                                <td class="text-end" colspan="3">SALDO</td>
+                                                <td>@(totalD>totalH?saldo:0)</td>
+                                                <td>@(totalD < totalH ? saldo : 0)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
