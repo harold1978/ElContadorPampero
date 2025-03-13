@@ -32,6 +32,17 @@ namespace ElContadorPampero.Controllers
                 .ToListAsync();
 
             ViewData["mayor"] = mayor;
+
+            var sumadebito = await _logger.DetalleAsientoContables
+                                .Where(a => a.AsientoContable.Fecha <= mf.ff && a.AsientoContable.Fecha >= mf.fi && a.Cargo == "Debe")
+                                .SumAsync(ss => ss.Monto);
+
+            var sumaHaber = await _logger.DetalleAsientoContables
+                                .Where(a => a.AsientoContable.Fecha <= mf.ff && a.AsientoContable.Fecha >= mf.fi && a.Cargo == "Haber")
+                                .SumAsync(ss => ss.Monto);
+
+            ViewData["sumadebito"] = sumadebito;
+            ViewData["sumaHaber"] = sumaHaber;
                 
             return View();
         }

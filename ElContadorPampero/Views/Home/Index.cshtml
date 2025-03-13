@@ -3,14 +3,15 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
-    <h1 class="display-4">MAYOREO DE CUENTAS</h1>
+<div class="row p-3">
+    <div class="col-7">
+    <h2 class="display-4">MAYOREO DE CUENTAS</h2>
     <form asp-action="Index">
         <div class="mb-3 row">
             <label class="col-4 col-form-label">Fecha inicion</label>
             <div class="col-8">
                 <input asp-for="fi" type="date" class="form-control" />
-
+                 
             </div>
         </div>
         <div class="mb-3 row">
@@ -69,8 +70,8 @@
                                                     <td scope="row">@item2.AsientoContable.NroAsiento</td>
                                                     <td>@item2.AsientoContable.Fecha</td>
                                                     <td>@item2.AsientoContable.Detalle</td>
-                                                    <td>@(item2.Cargo == "Debe" ? item2.Monto : 0)</td>
-                                                    <td>@(item2.Cargo == "Haber" ? item2.Monto : 0)</td>
+                                                        <td>@(item2.Cargo == "Debe" ? item2.Monto.ToString("C") : 0)</td>
+                                                        <td>@(item2.Cargo == "Haber" ? item2.Monto.ToString("C") : 0)</td>
                                                 </tr>
                                                 totalD += (item2.Cargo == "Debe" ? item2.Monto : 0);
                                                 totalH += (item2.Cargo == "Haber" ? item2.Monto : 0);
@@ -78,14 +79,14 @@
                                             
                                             <tr>
                                                 <td class="text-end" colspan="3">TOTALES</td>
-                                                <td>@totalD</td>
-                                                <td >@totalH</td>
+                                                <td>@totalD.ToString("C")</td>
+                                                    <td>@totalH.ToString("C")</td>
                                             </tr>
                                             @(saldo = totalD > totalH ? totalD - totalH : totalH - totalD)
                                             <tr>
                                                 <td class="text-end" colspan="3">SALDO</td>
-                                                <td>@(totalD>totalH?saldo:0)</td>
-                                                <td>@(totalD < totalH ? saldo : 0)</td>
+                                                    <td>@(totalD > totalH ? saldo.ToString("C") : 0)</td>
+                                                    <td>@(totalD < totalH ? saldo.ToString("C") : 0)</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -93,8 +94,59 @@
                             </td>
                         </tr>
                     }
-                }
-            </tbody>
-        </table>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
+    <div class="col-5 border border-2 border-success">
+        <h2 class="text-center">BALANCE DE COMPROBACION</h2>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">CODIGO</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">SALDO INICIAL</th>
+                        <th scope="col">CARGO</th>
+                        <th scope="col">ABONO</th>
+                        <th scope="col">SALDO FINAL</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal totalCargo = 0;
+                        decimal totalAbono = 0;
+                        //List<CuentaContable> datos = ViewBag.mayor != null ? ViewBag.mayor : new List<CuentaContable>();
+                        
+
+
+                        @foreach (CuentaContable item in ViewBag.mayor != null ? ViewBag.mayor : new List<CuentaContable>())
+                        {
+                            totalCargo = item.DetalleAsientoContables.Where(v => v.Cargo == "Debe").Sum(K => K.Monto);
+                            totalAbono = item.DetalleAsientoContables.Where(v1 => v1.Cargo == "Haber").Sum(K1 => K1.Monto);
+
+                            <tr>
+                                <td scope="row">@item.Codigo</td>
+                                <td>@item.Nombre</td>
+                                <td>@item.Saldo</td>
+                                <td>@totalCargo.ToString("C")</td>
+                                <td>@totalAbono.ToString("C")</td>
+                                <td>@(item.Tipo == "Activo" ? (item.Saldo + totalCargo - totalAbono).ToString("C") : item.Tipo == "Pasivo" || item.Tipo == "Patrimonio" ? (item.Saldo - totalCargo + totalAbono).ToString("C") : " ")</td>
+                            </tr>
+                            
+                        }
+                        <tr>
+                            <td colspan="3"></td>
+                            <td><strong>@ViewBag.sumadebito.ToString("C")</strong></td>
+                            <td><strong>@ViewBag.sumaHaber.ToString("C")</strong></td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </div>
