@@ -118,7 +118,7 @@
                     @{
                         decimal totalCargo = 0;
                         decimal totalAbono = 0;
-                        //List<CuentaContable> datos = ViewBag.mayor != null ? ViewBag.mayor : new List<CuentaContable>();
+                        List<CuentaContable> datos = ViewBag.mayor != null ? ViewBag.mayor : new List<CuentaContable>();
                         
 
 
@@ -139,8 +139,8 @@
                         }
                         <tr>
                             <td colspan="3"></td>
-                            <td><strong>@ViewBag.sumadebito.ToString("C")</strong></td>
-                            <td><strong>@ViewBag.sumaHaber.ToString("C")</strong></td>
+                            <td><strong>@(ViewBag.sumadebito != null ? ViewBag.sumadebito.ToString("C"):0)</strong></td>
+                            <td><strong>@(ViewBag.sumaHaber != null ? ViewBag.sumaHaber.ToString("C"):0)</strong></td>
                             <td></td>
                         </tr>
                     }
