@@ -19,35 +19,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AspNetRoleClaims]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AspNetRoles]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AspNetUserClaims]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AspNetUserLogins]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AspNetUserRoles]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AspNetUsers]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AspNetUserTokens]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[BalanceGeneral]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Contabilidad]",
          "ObjectType": 0
       },
       {
@@ -56,6 +32,10 @@
       },
       {
          "Name": "[dbo].[DetalleAsientoContable]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Mayoreo]",
          "ObjectType": 0
       }
    ],

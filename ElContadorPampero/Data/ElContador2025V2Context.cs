@@ -20,59 +20,39 @@ public partial class ElContador2025V2Context : DbContext
 
     public virtual DbSet<AsientoContable> AsientoContables { get; set; }
 
-    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-
-    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-
-    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-
-    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-
-    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-
-    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-
     public virtual DbSet<BalanceGeneral> BalanceGenerals { get; set; }
+
+    public virtual DbSet<Contabilidad> Contabilidads { get; set; }
 
     public virtual DbSet<CuentaContable> CuentaContables { get; set; }
 
     public virtual DbSet<DetalleAsientoContable> DetalleAsientoContables { get; set; }
 
+    public virtual DbSet<Mayoreo> Mayoreos { get; set; }
+
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=04107-5104201\\SQLEXPRESS;Initial Catalog=ElContador2025V2;Integrated Security=True;Encrypt=False");
+//        => optionsBuilder.UseSqlServer("Data Source=HEMM2024GAMING\\SQLEXPRESS;Initial Catalog=ElContador2025V2;Integrated Security=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AspNetRole>(entity =>
+        modelBuilder.Entity<AsientoContable>(entity =>
         {
-            entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
-                .IsUnique()
-                .HasFilter("([NormalizedName] IS NOT NULL)");
-        });
+            entity.HasKey(e => e.Id).HasName("PK_AsientoContable_1");
 
-        modelBuilder.Entity<AspNetUser>(entity =>
-        {
-            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
-                .IsUnique()
-                .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AspNetUserRole",
-                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId");
-                        j.ToTable("AspNetUserRoles");
-                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
-                    });
+            entity.HasOne(d => d.Contabilidad).WithMany(p => p.AsientoContables)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AsientoContable_Contabilidad");
         });
 
         modelBuilder.Entity<BalanceGeneral>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<Contabilidad>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Contabil__3214EC07A4F05597");
         });
 
         modelBuilder.Entity<DetalleAsientoContable>(entity =>
@@ -84,6 +64,13 @@ public partial class ElContador2025V2Context : DbContext
             entity.HasOne(d => d.CuentaContable).WithMany(p => p.DetalleAsientoContables)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DetalleAsientoContable_CuentaContable");
+        });
+
+        modelBuilder.Entity<Mayoreo>(entity =>
+        {
+            entity.HasOne(d => d.CuentaContable).WithMany(p => p.Mayoreos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Mayoreo_CuentaContable");
         });
 
         OnModelCreatingPartial(modelBuilder);

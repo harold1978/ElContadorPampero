@@ -34,4 +34,7 @@ public partial class CuentaContable
 
     [InverseProperty("CuentaContable")]
     public virtual ICollection<DetalleAsientoContable> DetalleAsientoContables { get; set; } = new List<DetalleAsientoContable>();
+
+    [InverseProperty("CuentaContable")]
+    public virtual ICollection<Mayoreo> Mayoreos { get; set; } = new List<Mayoreo>();
 }
