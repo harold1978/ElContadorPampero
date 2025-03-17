@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,11 +30,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-outline-primary btn-sm" asp-area="" asp-controller="CuentaContables" asp-action="Index"><i class="bi bi-list-check border border-1"></i> CUENTAS</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item"> 
                             <a class="nav-link text-dark btn btn-outline-primary btn-sm" asp-area="" asp-controller="AsientoContables" asp-action="index">ASIENTOS DIARIOS</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-outline-primary btn-sm" asp-area="" asp-controller="DetalleAsientoContables" asp-action="index">MOVIMIENTOS</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <span>@if (User.Identity!.IsAuthenticated)
+                                {
+                                    <a class="nav-link text-dark btn btn-danger btn-sm ms-2" asp-controller="Usuarios" asp-action="Salir">
+                                        @User.Claims.Where(c=>c.Type == ClaimTypes.Email).Select(j=>j.Value).SingleOrDefault();
+                                    </a>
+                                }
+                            </span>
                         </li>
                     </ul>
                 </div>

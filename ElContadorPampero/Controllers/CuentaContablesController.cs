@@ -7,11 +7,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElContadorPampero.Data;
 using ElContadorPampero.Models;
+using Microsoft.AspNetCore.Authorization;
+//using System.Security.Claims;
+//using Microsoft.AspNetCore.Authentication;
+//using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElContadorPampero.Controllers
 {
+    [Authorize]
     public class CuentaContablesController : Controller
     {
+        
         private readonly ElContador2025V2Context _context;
 
         public CuentaContablesController(ElContador2025V2Context context)

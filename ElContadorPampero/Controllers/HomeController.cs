@@ -1,12 +1,14 @@
 using ElContadorPampero.Data;
 using ElContadorPampero.Models;
 using ElContadorPampero.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ElContadorPampero.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ElContador2025V2Context _logger;

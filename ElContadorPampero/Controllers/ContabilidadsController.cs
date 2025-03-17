@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElContadorPampero.Data;
 using ElContadorPampero.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ElContadorPampero.Controllers
 {
+    [Authorize]
     public class ContabilidadsController : Controller
     {
         private readonly ElContador2025V2Context _context;
@@ -22,7 +25,8 @@ namespace ElContadorPampero.Controllers
         // GET: Contabilidads
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Contabilidads.ToListAsync());
+            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario);
+            return View(await elContador2025V2Context.ToListAsync());
         }
 
         // GET: Contabilidads/Details/5
@@ -34,6 +38,7 @@ namespace ElContadorPampero.Controllers
             }
 
             var contabilidad = await _context.Contabilidads
+                .Include(c => c.Usuario)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (contabilidad == null)
             {
@@ -46,6 +51,7 @@ namespace ElContadorPampero.Controllers
         // GET: Contabilidads/Create
         public IActionResult Create()
         {
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos");
             return View();
         }
 
@@ -54,14 +60,16 @@ namespace ElContadorPampero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FechaCreacion,Nombre,FechaInicioPeriodo,FechaFinalPeriodo,Empresa")] Contabilidad contabilidad)
+        public async Task<IActionResult> Create([Bind("Id,FechaCreacion,Nombre,FechaInicioPeriodo,FechaFinalPeriodo,Empresa,UsuarioId")] Contabilidad contabilidad)
         {
             if (ModelState.IsValid)
             {
+
                 _context.Add(contabilidad);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Email", User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault());
             return View(contabilidad);
         }
 
@@ -78,6 +86,7 @@ namespace ElContadorPampero.Controllers
             {
                 return NotFound();
             }
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos", contabilidad.UsuarioId);
             return View(contabilidad);
         }
 
@@ -86,7 +95,7 @@ namespace ElContadorPampero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FechaCreacion,Nombre,FechaInicioPeriodo,FechaFinalPeriodo,Empresa")] Contabilidad contabilidad)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FechaCreacion,Nombre,FechaInicioPeriodo,FechaFinalPeriodo,Empresa,UsuarioId")] Contabilidad contabilidad)
         {
             if (id != contabilidad.Id)
             {
@@ -113,6 +122,7 @@ namespace ElContadorPampero.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos", contabilidad.UsuarioId);
             return View(contabilidad);
         }
 
@@ -125,6 +135,7 @@ namespace ElContadorPampero.Controllers
             }
 
             var contabilidad = await _context.Contabilidads
+                .Include(c => c.Usuario)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (contabilidad == null)
             {

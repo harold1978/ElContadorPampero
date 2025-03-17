@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElContadorPampero.Data;
 using ElContadorPampero.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElContadorPampero.Controllers
 {
+    [Authorize]
     public class AsientoContablesController : Controller
     {
         private readonly ElContador2025V2Context _context;

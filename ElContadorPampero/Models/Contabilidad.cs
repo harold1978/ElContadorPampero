@@ -33,6 +33,12 @@ public partial class Contabilidad
     [Unicode(false)]
     public string Empresa { get; set; }
 
+    public int UsuarioId { get; set; }
+
     [InverseProperty("Contabilidad")]
     public virtual ICollection<AsientoContable> AsientoContables { get; set; } = new List<AsientoContable>();
+
+    [ForeignKey("UsuarioId")]
+    [InverseProperty("Contabilidads")]
+    public virtual Usuario Usuario { get; set; }
 }

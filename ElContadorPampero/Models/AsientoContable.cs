@@ -26,10 +26,16 @@ public partial class AsientoContable
 
     public int ContabilidadId { get; set; }
 
+    public int UsuarioId { get; set; }
+
     [ForeignKey("ContabilidadId")]
     [InverseProperty("AsientoContables")]
     public virtual Contabilidad Contabilidad { get; set; }
 
     [InverseProperty("AsientoContable")]
     public virtual ICollection<DetalleAsientoContable> DetalleAsientoContables { get; set; } = new List<DetalleAsientoContable>();
+
+    [ForeignKey("UsuarioId")]
+    [InverseProperty("AsientoContables")]
+    public virtual Usuario Usuario { get; set; }
 }

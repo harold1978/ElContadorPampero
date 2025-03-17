@@ -30,19 +30,25 @@ public partial class ElContador2025V2Context : DbContext
 
     public virtual DbSet<Mayoreo> Mayoreos { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=HEMM2024GAMING\\SQLEXPRESS;Initial Catalog=ElContador2025V2;Integrated Security=True;Encrypt=False");
+    public virtual DbSet<Usuario> Usuarios { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=HEMM2024GAMING\\SQLEXPRESS;Initial Catalog=ElContador2025V2;Integrated Security=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AsientoContable>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_AsientoContable_1");
+            entity.HasKey(e => e.Id).HasName("PK__AsientoC__3214EC07CEA635D2");
 
             entity.HasOne(d => d.Contabilidad).WithMany(p => p.AsientoContables)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AsientoContable_Contabilidad");
+
+            entity.HasOne(d => d.Usuario).WithMany(p => p.AsientoContables)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AsientoContable_Usuario");
         });
 
         modelBuilder.Entity<BalanceGeneral>(entity =>
@@ -52,7 +58,11 @@ public partial class ElContador2025V2Context : DbContext
 
         modelBuilder.Entity<Contabilidad>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Contabil__3214EC07A4F05597");
+            entity.HasKey(e => e.Id).HasName("PK__Contabil__3214EC077749B4F3");
+
+            entity.HasOne(d => d.Usuario).WithMany(p => p.Contabilidads)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Contabilidad_Usuario");
         });
 
         modelBuilder.Entity<DetalleAsientoContable>(entity =>
@@ -71,6 +81,11 @@ public partial class ElContador2025V2Context : DbContext
             entity.HasOne(d => d.CuentaContable).WithMany(p => p.Mayoreos)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Mayoreo_CuentaContable");
+        });
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Usuario__3214EC0798F2FD02");
         });
 
         OnModelCreatingPartial(modelBuilder);
