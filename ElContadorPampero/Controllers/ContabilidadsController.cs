@@ -23,9 +23,10 @@ namespace ElContadorPampero.Controllers
         }
 
         // GET: Contabilidads
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string UsuarioId)
         {
-            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario);
+            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario).Where(r => r.UsuarioId == int.Parse(UsuarioId));
+             
             return View(await elContador2025V2Context.ToListAsync());
         }
 
@@ -51,7 +52,7 @@ namespace ElContadorPampero.Controllers
         // GET: Contabilidads/Create
         public IActionResult Create()
         {
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos");
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios,"Id", "Apellidos",User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault());
             return View();
         }
 

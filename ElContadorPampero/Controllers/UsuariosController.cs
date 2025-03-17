@@ -74,6 +74,8 @@ namespace ElContadorPampero.Controllers
                 ViewData["msg"] = "Usuario No encontrado";
                 return View();
             }
+            
+
             List<Claim> claims = new List<Claim>() {
                 new Claim(ClaimTypes.Email,usuarioEncontrado.Email),
                 new Claim(ClaimTypes.Sid, usuarioEncontrado.Id.ToString())
@@ -87,7 +89,7 @@ namespace ElContadorPampero.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     pro
                 );
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index","Inicio");
         } 
 
         public IActionResult Login()
