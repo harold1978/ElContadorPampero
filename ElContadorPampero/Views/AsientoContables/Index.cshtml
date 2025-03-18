@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Asientos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-outline-primary btn-sm" asp-action="Create">Crear nuevo para contabilidad: @(Model.FirstOrDefault() != null ? Model.FirstOrDefault()!.Contabilidad.Empresa : " ")</a>
 </p>
 <div class=" container table-responsive">
 

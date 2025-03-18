@@ -22,9 +22,15 @@ namespace ElContadorPampero.Controllers
         }
 
         // GET: AsientoContables
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
-            return View(await _context.AsientoContables.ToListAsync());
+            return View(await _context.AsientoContables
+                .Where(c=>c.ContabilidadId==id)
+                .Include(d=>d.Contabilidad)
+                .Include(f=>f.DetalleAsientoContables)
+                .ThenInclude(g=>g.CuentaContable)
+
+                .ToListAsync());
         }
 
         // GET: AsientoContables/Details/5

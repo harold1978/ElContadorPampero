@@ -57,8 +57,10 @@
             <td>
                 <a class="btn btn-outline-dark btn-sm" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
                     <a class="btn btn-outline-dark btn-sm" asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                    <a class="btn btn-outline-dark btn-sm" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
-            </td>
+                    <a class="btn btn-outline-dark btn-sm" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a> |
+                    <a class="btn btn-outline-dark btn-sm" asp-controller="AsientoContables" asp-action="Index" asp-route-id="@item.Id">Asientos</a>
+
+                </td>
         </tr>
 }
     </tbody>

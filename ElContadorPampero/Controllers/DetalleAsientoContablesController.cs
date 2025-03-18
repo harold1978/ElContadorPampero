@@ -84,10 +84,12 @@ namespace ElContadorPampero.Controllers
             {
                 _context.Add(detalleAsientoContable);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", detalleAsientoContable.AsientoContableId);
+                //return RedirectToAction(nameof(Index));
             }
             ViewData["AsientoContableId"] = new SelectList(_context.AsientoContables, "Id", "Detalle", detalleAsientoContable.AsientoContableId);
             ViewData["CuentaContableId"] = new SelectList(_context.CuentaContables, "Id", "Codigo", detalleAsientoContable.CuentaContableId);
+            //return RedirectToAction("Index",detalleAsientoContable.AsientoContableId);
             return View(detalleAsientoContable);
         }
 

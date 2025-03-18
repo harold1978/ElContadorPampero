@@ -39,7 +39,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="UsuarioId" class="control-label"></label>
-                <input disabled asp-for="UsuarioId" class="form-control" value="@User.Claims.Where(c=>c.Type == ClaimTypes.Sid).Select(j=>j.Value).SingleOrDefault()" />
+                <input hidden asp-for="UsuarioId" class="form-control" value="@User.Claims.Where(c=>c.Type == ClaimTypes.Sid).Select(j=>j.Value).SingleOrDefault()" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

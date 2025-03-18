@@ -25,6 +25,9 @@ namespace ElContadorPampero.Controllers
         // GET: Contabilidads
         public async Task<IActionResult> Index(string UsuarioId)
         {
+            if (UsuarioId==null) {
+                UsuarioId = User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault()!;
+            }
             var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario).Where(r => r.UsuarioId == int.Parse(UsuarioId));
              
             return View(await elContador2025V2Context.ToListAsync());
@@ -68,7 +71,7 @@ namespace ElContadorPampero.Controllers
 
                 _context.Add(contabilidad);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index),contabilidad.UsuarioId);
             }
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Email", User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault());
             return View(contabilidad);
