@@ -1,4 +1,4 @@
-﻿ @model ElContadorPampero.Models.AsientoContable
+﻿@model ElContadorPampero.Models.AsientoContable
 
 @{
     ViewData["Title"] = "Create";
@@ -32,6 +32,10 @@
                 <select asp-for="ContabilidadId" class ="form-control" asp-items="ViewBag.ContabilidadId"></select>
             </div>
             <div class="form-group">
+                <label asp-for="UsuarioId" class="control-label"></label>
+                <select asp-for="UsuarioId" class ="form-control" asp-items="ViewBag.UsuarioId"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -42,6 +46,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

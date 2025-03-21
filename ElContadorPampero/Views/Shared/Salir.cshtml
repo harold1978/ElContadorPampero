@@ -1,0 +1,8 @@
+﻿@using System.Security.Claims
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<form asp-controller="Usuarios" asp-action="Salir" asp-route-s="true">
+    <input type="submit" class="btn btn-danger ms-2" value="@(User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(j => j.Value).SingleOrDefault())" />
+</form>

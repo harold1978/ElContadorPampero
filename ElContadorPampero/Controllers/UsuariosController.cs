@@ -15,15 +15,17 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ElContadorPampero.Controllers
-    
+
 {
     public class UsuariosController : Controller
     {
         private readonly ElContador2025V2Context _context;
+        private readonly IUsuario _usuario;
 
-        public UsuariosController(ElContador2025V2Context context)
+        public UsuariosController(ElContador2025V2Context context, IUsuario usuario)
         {
             _context = context;
+            _usuario = usuario;
         }
 
         // GET: Usuarios
@@ -50,38 +52,42 @@ namespace ElContadorPampero.Controllers
             return View(usuario);
         }
 
+        public IActionResult Salir()
+        {
+            ViewData["correo"] = _usuario.GetCorreo();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Salir(bool s)
+        {
+            if (s)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
 
-
-
-        public async Task<IActionResult> Salir() {
-
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Usuarios");
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel credenciales) {
-
+        public async Task<IActionResult> Login(LoginViewModel credenciales)
+        {
             Usuario? usuarioEncontrado = await _context.Usuarios
                                         .Where(u =>
                                             u.Email == credenciales.Email &&
                                             u.Pass == credenciales.Password).FirstOrDefaultAsync();
-
-            if (usuarioEncontrado == null) {
+            if (usuarioEncontrado == null)
+            {
                 ViewData["msg"] = "Usuario No encontrado";
                 return View();
             }
-            
-
             List<Claim> claims = new List<Claim>() {
                 new Claim(ClaimTypes.Email,usuarioEncontrado.Email),
                 new Claim(ClaimTypes.Sid, usuarioEncontrado.Id.ToString())
             };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
-            AuthenticationProperties pro = new AuthenticationProperties() { 
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            AuthenticationProperties pro = new AuthenticationProperties()
+            {
                 AllowRefresh = true,
             };
             await HttpContext.SignInAsync(
@@ -89,8 +95,10 @@ namespace ElContadorPampero.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     pro
                 );
-            return RedirectToAction("Index","Inicio");
-        } 
+            _usuario.SetUsuarioId(usuarioEncontrado.Id.ToString());
+            _usuario.SetCorreo(usuarioEncontrado.Email);
+            return RedirectToAction("Index", "Inicio");
+        }
 
         public IActionResult Login()
         {
@@ -111,7 +119,8 @@ namespace ElContadorPampero.Controllers
         public async Task<IActionResult> Create(Registrarse usuario)
         {
             Usuario user = new Usuario();
-            if (usuario.Email != usuario.ConfirmarEmail) {
+            if (usuario.Email != usuario.ConfirmarEmail)
+            {
                 ViewData["msg"] = "CONFIRMACION DE CORREO INCORRECTA";
                 return View();
             }
@@ -121,9 +130,9 @@ namespace ElContadorPampero.Controllers
             user.Nombre = usuario.Nombre;
             user.Identificacion = usuario.Identificacion;
 
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Login));
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Login));
         }
 
         // GET: Usuarios/Edit/5

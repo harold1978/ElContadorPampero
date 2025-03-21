@@ -22,19 +22,15 @@ namespace ElContadorPampero.Controllers
         }
 
         // GET: DetalleAsientoContables
-        public async Task<IActionResult> Index(int? AsientoId)
+        public async Task<IActionResult> Index(int id)
         {
-            if (AsientoId != null) {
-                var detalles = await _context.DetalleAsientoContables
-                    .Include(d => d.AsientoContable)
-                    .Include(d => d.CuentaContable)
-                    .Where(i => i.AsientoContableId == AsientoId).ToListAsync();
-                return View(detalles);
-            }
-            var elContador2025V2Context = _context.DetalleAsientoContables.Include(d => d.AsientoContable).Include(d => d.CuentaContable);
-            return View(await elContador2025V2Context.ToListAsync());
-        }
+            var elContador2025V2Context = await _context.DetalleAsientoContables
+                .Include(d => d.AsientoContable)
+                .Include(d => d.CuentaContable)
+                .Where(w=>w.AsientoContableId == id).ToListAsync();
 
+            return View(elContador2025V2Context);
+        }
 
         // GET: DetalleAsientoContables/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -57,19 +53,10 @@ namespace ElContadorPampero.Controllers
         }
 
         // GET: DetalleAsientoContables/Create
-        public IActionResult Create(int? AsientoId)
+        public IActionResult Create()
         {
-            if (AsientoId != null)
-            {
-                ViewData["AsientoContableId"] = new SelectList(_context.AsientoContables, "Id", "NroAsiento", AsientoId);
-            }
-            else
-            {
-                ViewData["AsientoContableId"] = new SelectList(_context.AsientoContables, "Id", "NroAsiento");
-            }
-            ViewData["CuentaContableId"] = new SelectList(_context.CuentaContables, "Id", "Nombre");
-           // ViewData["cargos"] = new List<SelectListItem> { new SelectListItem { Text = "Debe", Value = "Debe" }, new SelectListItem { Text = "Haber", Value = "Haber" } };
-
+            ViewData["AsientoContableId"] = new SelectList(_context.AsientoContables, "Id", "Detalle");
+            ViewData["CuentaContableId"] = new SelectList(_context.CuentaContables, "Id", "Codigo");
             return View();
         }
 
@@ -84,12 +71,10 @@ namespace ElContadorPampero.Controllers
             {
                 _context.Add(detalleAsientoContable);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", detalleAsientoContable.AsientoContableId);
-                //return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             ViewData["AsientoContableId"] = new SelectList(_context.AsientoContables, "Id", "Detalle", detalleAsientoContable.AsientoContableId);
             ViewData["CuentaContableId"] = new SelectList(_context.CuentaContables, "Id", "Codigo", detalleAsientoContable.CuentaContableId);
-            //return RedirectToAction("Index",detalleAsientoContable.AsientoContableId);
             return View(detalleAsientoContable);
         }
 

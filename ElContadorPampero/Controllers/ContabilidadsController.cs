@@ -16,20 +16,18 @@ namespace ElContadorPampero.Controllers
     public class ContabilidadsController : Controller
     {
         private readonly ElContador2025V2Context _context;
-
-        public ContabilidadsController(ElContador2025V2Context context)
+        private IUsuario _UsuarioId;
+        public ContabilidadsController(ElContador2025V2Context context, IUsuario iusuario)
         {
             _context = context;
+            _UsuarioId = iusuario;
         }
 
         // GET: Contabilidads
-        public async Task<IActionResult> Index(string UsuarioId)
+        public async Task<IActionResult> Index()
         {
-            if (UsuarioId==null) {
-                UsuarioId = User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault()!;
-            }
-            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario).Where(r => r.UsuarioId == int.Parse(UsuarioId));
-             
+            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario).Where(r => r.UsuarioId == int.Parse(_UsuarioId.GetUsuarioId()));
+
             return View(await elContador2025V2Context.ToListAsync());
         }
 
@@ -55,7 +53,7 @@ namespace ElContadorPampero.Controllers
         // GET: Contabilidads/Create
         public IActionResult Create()
         {
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios,"Id", "Apellidos",User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault());
+            ViewData["UsuarioId"] = _UsuarioId.GetUsuarioId(); //new SelectList(_context.Usuarios,"Id", "Apellidos",_UsuarioId.GetUsuarioId());
             return View();
         }
 
@@ -71,9 +69,9 @@ namespace ElContadorPampero.Controllers
 
                 _context.Add(contabilidad);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index),contabilidad.UsuarioId);
+                return RedirectToAction(nameof(Index), contabilidad.UsuarioId);
             }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Email", User.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(j => j.Value).SingleOrDefault());
+            ViewData["UsuarioId"] = _UsuarioId.GetUsuarioId();
             return View(contabilidad);
         }
 
@@ -90,7 +88,7 @@ namespace ElContadorPampero.Controllers
             {
                 return NotFound();
             }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos", contabilidad.UsuarioId);
+            ViewData["UsuarioId"] = _UsuarioId.GetUsuarioId();
             return View(contabilidad);
         }
 
@@ -126,7 +124,7 @@ namespace ElContadorPampero.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos", contabilidad.UsuarioId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Apellidos", _UsuarioId.GetUsuarioId());
             return View(contabilidad);
         }
 

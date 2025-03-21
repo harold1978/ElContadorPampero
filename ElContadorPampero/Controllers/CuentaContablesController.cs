@@ -20,7 +20,7 @@ namespace ElContadorPampero.Controllers
     {
         
         private readonly ElContador2025V2Context _context;
-
+        private static string? _UsuarioId = null;
         public CuentaContablesController(ElContador2025V2Context context)
         {
             _context = context;

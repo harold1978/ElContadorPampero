@@ -15,22 +15,31 @@ namespace ElContadorPampero.Controllers
     public class AsientoContablesController : Controller
     {
         private readonly ElContador2025V2Context _context;
+        private readonly IUsuario _usuario;
 
-        public AsientoContablesController(ElContador2025V2Context context)
+        public AsientoContablesController(ElContador2025V2Context context, IUsuario usuario)
         {
             _context = context;
+            _usuario = usuario;
         }
 
         // GET: AsientoContables
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.AsientoContables
-                .Where(c=>c.ContabilidadId==id)
-                .Include(d=>d.Contabilidad)
-                .Include(f=>f.DetalleAsientoContables)
-                .ThenInclude(g=>g.CuentaContable)
+            if (id!=null) {
+                _usuario.SetContabilidadId(id.Value);
+            }
+            
+            var elContador2025V2Context = _context.AsientoContables
+                .Include(a => a.Contabilidad)
+                .Include(a => a.Usuario)
+                .Include(e=>e.DetalleAsientoContables)
+                .Where(idu => idu.ContabilidadId == _usuario.GetContabilidadId() && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()));
 
-                .ToListAsync());
+            //var totaldebe =elContador2025V2Context.
+            //var totalHaber = elContador2025V2Context.Where(t => t.Cargo == "Haber").Sum(o => o.Monto);
+            ViewData["valido"] = "Valido";
+            return View(await elContador2025V2Context.ToListAsync());
         }
 
         // GET: AsientoContables/Details/5
@@ -42,6 +51,9 @@ namespace ElContadorPampero.Controllers
             }
 
             var asientoContable = await _context.AsientoContables
+                .Include(a => a.Contabilidad)
+                .Include(a => a.Usuario)
+                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()))
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (asientoContable == null)
             {
@@ -54,6 +66,8 @@ namespace ElContadorPampero.Controllers
         // GET: AsientoContables/Create
         public IActionResult Create()
         {
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa",_usuario.GetContabilidadId());
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos");
             return View();
         }
 
@@ -62,7 +76,7 @@ namespace ElContadorPampero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Fecha,Detalle,NroAsiento")] AsientoContable asientoContable)
+        public async Task<IActionResult> Create([Bind("Id,Fecha,Detalle,NroAsiento,ContabilidadId,UsuarioId")] AsientoContable asientoContable)
         {
             if (ModelState.IsValid)
             {
@@ -70,7 +84,9 @@ namespace ElContadorPampero.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(asientoContable);
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa", _usuario.GetContabilidadId());
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos", _usuario.GetUsuarioId());
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AsientoContables/Edit/5
@@ -86,6 +102,8 @@ namespace ElContadorPampero.Controllers
             {
                 return NotFound();
             }
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa", asientoContable.ContabilidadId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos", asientoContable.UsuarioId);
             return View(asientoContable);
         }
 
@@ -94,7 +112,7 @@ namespace ElContadorPampero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Fecha,Detalle,NroAsiento")] AsientoContable asientoContable)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Fecha,Detalle,NroAsiento,ContabilidadId,UsuarioId")] AsientoContable asientoContable)
         {
             if (id != asientoContable.Id)
             {
@@ -121,6 +139,8 @@ namespace ElContadorPampero.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa", asientoContable.ContabilidadId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos", asientoContable.UsuarioId);
             return View(asientoContable);
         }
 
@@ -133,6 +153,9 @@ namespace ElContadorPampero.Controllers
             }
 
             var asientoContable = await _context.AsientoContables
+                .Include(a => a.Contabilidad)
+                .Include(a => a.Usuario)
+                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()))
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (asientoContable == null)
             {
