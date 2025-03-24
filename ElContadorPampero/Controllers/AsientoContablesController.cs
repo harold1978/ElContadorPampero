@@ -34,12 +34,12 @@ namespace ElContadorPampero.Controllers
                 .Include(a => a.Contabilidad)
                 .Include(a => a.Usuario)
                 .Include(e=>e.DetalleAsientoContables)
-                .Where(idu => idu.ContabilidadId == _usuario.GetContabilidadId() && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()));
+                .Where(idu => idu.ContabilidadId == _usuario.GetContabilidadId() && idu.UsuarioId == _usuario.GetUsuarioId());
 
             var lista = await _context.DetalleAsientoContables
                         .Include(r=>r.AsientoContable)
                         .Where(h=>h.AsientoContable.ContabilidadId == _usuario.GetContabilidadId() &&
-                        h.AsientoContable.UsuarioId == int.Parse(_usuario.GetUsuarioId())).ToListAsync();
+                        h.AsientoContable.UsuarioId == _usuario.GetUsuarioId()).ToListAsync();
 
             //var totaldebe =elContador2025V2Context.
             //var totalHaber = elContador2025V2Context.Where(t => t.Cargo == "Haber").Sum(o => o.Monto);
@@ -58,7 +58,7 @@ namespace ElContadorPampero.Controllers
             var asientoContable = await _context.AsientoContables
                 .Include(a => a.Contabilidad)
                 .Include(a => a.Usuario)
-                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()))
+                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == _usuario.GetUsuarioId())
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (asientoContable == null)
             {
@@ -71,8 +71,8 @@ namespace ElContadorPampero.Controllers
         // GET: AsientoContables/Create
         public IActionResult Create()
         {
-            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa",_usuario.GetContabilidadId());
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos");
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == _usuario.GetUsuarioId()), "Id", "Empresa",_usuario.GetContabilidadId());
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == _usuario.GetUsuarioId()), "Id", "Apellidos");
             return View();
         }
 
@@ -89,8 +89,8 @@ namespace ElContadorPampero.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa", _usuario.GetContabilidadId());
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos", _usuario.GetUsuarioId());
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == _usuario.GetUsuarioId()), "Id", "Empresa", _usuario.GetContabilidadId());
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == _usuario.GetUsuarioId()), "Id", "Apellidos", _usuario.GetUsuarioId());
             return RedirectToAction(nameof(Index));
         }
 
@@ -107,8 +107,8 @@ namespace ElContadorPampero.Controllers
             {
                 return NotFound();
             }
-            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa", asientoContable.ContabilidadId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos", asientoContable.UsuarioId);
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == _usuario.GetUsuarioId()), "Id", "Empresa", asientoContable.ContabilidadId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == _usuario.GetUsuarioId()), "Id", "Apellidos", asientoContable.UsuarioId);
             return View(asientoContable);
         }
 
@@ -144,8 +144,8 @@ namespace ElContadorPampero.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == int.Parse(_usuario.GetUsuarioId())), "Id", "Empresa", asientoContable.ContabilidadId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == int.Parse(_usuario.GetUsuarioId())), "Id", "Apellidos", asientoContable.UsuarioId);
+            ViewData["ContabilidadId"] = new SelectList(_context.Contabilidads.Where(idu => idu.UsuarioId == _usuario.GetUsuarioId()), "Id", "Empresa", asientoContable.ContabilidadId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios.Where(idu => idu.Id == _usuario.GetUsuarioId()), "Id", "Apellidos", asientoContable.UsuarioId);
             return View(asientoContable);
         }
 
@@ -160,7 +160,7 @@ namespace ElContadorPampero.Controllers
             var asientoContable = await _context.AsientoContables
                 .Include(a => a.Contabilidad)
                 .Include(a => a.Usuario)
-                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()))
+                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == _usuario.GetUsuarioId())
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (asientoContable == null)
             {

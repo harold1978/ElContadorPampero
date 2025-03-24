@@ -9,7 +9,7 @@ namespace ElContadorPampero.Data
 
     public interface IUsuario {
         public void SetUsuarioId(string? id);
-        public string GetUsuarioId();
+        public int GetUsuarioId();
         public void SetContabilidadId(int id);
         public int GetContabilidadId();
 
@@ -32,12 +32,12 @@ namespace ElContadorPampero.Data
 
         public string GetCorreo()
         {
-            return _correo;
+            return _correo!;
         }
 
-        public string GetUsuarioId()
+        public int GetUsuarioId()
         {
-            return _UsuarioId!;
+            return int.Parse( _UsuarioId!);
         }
 
         public void SetContabilidadId(int id)

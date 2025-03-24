@@ -26,7 +26,7 @@ namespace ElContadorPampero.Controllers
         // GET: Contabilidads
         public async Task<IActionResult> Index()
         {
-            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario).Where(r => r.UsuarioId == int.Parse(_UsuarioId.GetUsuarioId()));
+            var elContador2025V2Context = _context.Contabilidads.Include(c => c.Usuario).Where(r => r.UsuarioId == _UsuarioId.GetUsuarioId());
 
             return View(await elContador2025V2Context.ToListAsync());
         }
