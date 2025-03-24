@@ -1,7 +1,15 @@
 ﻿@model IEnumerable<ElContadorPampero.Models.AsientoContable>
-
+@using ElContadorPampero.Data
 @{
     ViewData["Title"] = "Index";
+    List<DetalleAsientoContable> l = ViewBag.listaV as List<DetalleAsientoContable> ?? null;
+
+    bool validar(int idasiento)
+    {
+        var todosDebe = l.FindAll(k => k.AsientoContableId == idasiento).Where(p => p.Cargo == "Debe").Sum(j=>j.Monto);
+        var todosHaber = l.FindAll(k => k.AsientoContableId == idasiento).Where(p => p.Cargo == "Haber").Sum(j => j.Monto);
+        return todosDebe == todosHaber;
+    }
 }
 
 <h1>Index</h1>
@@ -49,11 +57,10 @@
                 @Html.DisplayFor(modelItem => item.Usuario.Apellidos)
             </td>
             <td>
-                <span>@ViewBag.valido</span>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                    <a asp-action="Index" asp-controller="DetalleAsientoContables" asp-route-id="@item.Id">Movimientos</a>
+                <a class="@(validar(item.Id)?"bg-light text-primary rounded-pill p-2":"bg-light text-danger rounded-pill p-2")" asp-action="Index" asp-controller="DetalleAsientoContables" asp-route-id="@item.Id"><strong>@(validar(item.Id)?"Movimientos Validos":"Movimientos NO Validos")</strong></a>
             </td>
         </tr>
 }

@@ -17,6 +17,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddSingleton<IUsuario, UsuarioServicio>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

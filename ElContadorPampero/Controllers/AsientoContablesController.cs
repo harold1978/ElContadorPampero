@@ -36,9 +36,14 @@ namespace ElContadorPampero.Controllers
                 .Include(e=>e.DetalleAsientoContables)
                 .Where(idu => idu.ContabilidadId == _usuario.GetContabilidadId() && idu.UsuarioId == int.Parse(_usuario.GetUsuarioId()));
 
+            var lista = await _context.DetalleAsientoContables
+                        .Include(r=>r.AsientoContable)
+                        .Where(h=>h.AsientoContable.ContabilidadId == _usuario.GetContabilidadId() &&
+                        h.AsientoContable.UsuarioId == int.Parse(_usuario.GetUsuarioId())).ToListAsync();
+
             //var totaldebe =elContador2025V2Context.
             //var totalHaber = elContador2025V2Context.Where(t => t.Cargo == "Haber").Sum(o => o.Monto);
-            ViewData["valido"] = "Valido";
+            ViewBag.listaV = lista;
             return View(await elContador2025V2Context.ToListAsync());
         }
 
