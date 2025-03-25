@@ -31,7 +31,7 @@
         </form>
         <br />
         <div class="table-responsive">
-            <table class="table table-sm">
+             <table class="table table-sm">
                 <thead>
                     <tr>
                         <th scope="col">CODIGO</th>
@@ -71,8 +71,8 @@
                                                         <td scope="row">@item2.AsientoContable.NroAsiento</td>
                                                         <td>@item2.AsientoContable.Fecha</td>
                                                         <td>@item2.AsientoContable.Detalle</td>
-                                                        <td>@(item2.Cargo == "Debe" ? item2.Monto.ToString("C") : 0)</td>
-                                                        <td>@(item2.Cargo == "Haber" ? item2.Monto.ToString("C") : 0)</td>
+                                                        <td>@(item2.Cargo == "Debe" ? item2.Monto : 0)</td>
+                                                        <td>@(item2.Cargo == "Haber" ? item2.Monto : 0)</td>
                                                     </tr>
                                                     totalD += (item2.Cargo == "Debe" ? item2.Monto : 0);
                                                     totalH += (item2.Cargo == "Haber" ? item2.Monto : 0);
@@ -80,14 +80,14 @@
 
                                                 <tr>
                                                     <td class="text-end" colspan="3">TOTALES</td>
-                                                    <td>@totalD.ToString("C")</td>
-                                                    <td>@totalH.ToString("C")</td>
+                                                    <td>@totalD</td>
+                                                    <td>@totalH</td>
                                                 </tr>
                                                 @(saldo = totalD > totalH ? totalD - totalH : totalH - totalD)
                                                 <tr>
                                                     <td class="text-end" colspan="3">SALDO</td>
-                                                    <td>@(totalD > totalH ? saldo.ToString("C") : 0)</td>
-                                                    <td>@(totalD < totalH ? saldo.ToString("C") : 0)</td>
+                                                    <td>@(totalD > totalH ? saldo : 0)</td>
+                                                    <td>@(totalD < totalH ? saldo : 0)</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -97,12 +97,12 @@
                         }
                     }
                 </tbody>
-            </table>
+            </table> 
         </div>
     </div>
     <div class="col-5 border border-2 border-success">
         <h2 class="text-center">BALANCE DE COMPROBACION</h2>
-        <div class="table-responsive">
+         <div class="table-responsive">
             <table class="table table-sm">
                 <thead>
                     <tr>
@@ -147,7 +147,7 @@
                     }
                 </tbody>
             </table>
-        </div>
+        </div> 
     </div>
 </div>
 <ul>

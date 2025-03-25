@@ -1,6 +1,7 @@
 using ElContadorPampero.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddSingleton<IUsuario, UsuarioServicio>();
+
+//ignorar referencias ciclicas en consultas 
+builder.Services.AddControllers().AddJsonOptions(f => f.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 

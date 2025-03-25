@@ -34,35 +34,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaInicioPeriodo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaFinalPeriodo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Empresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Apellidos)
-            </td>
-            <td>
-                <a class="btn btn-outline-dark btn-sm" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                    <a class="btn btn-outline-dark btn-sm" asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                    <a class="btn btn-outline-dark btn-sm" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a> |
-                    <a class="btn btn-outline-dark btn-sm" asp-controller="AsientoContables" asp-action="Index" asp-route-id="@item.Id">Asientos</a>
-                    <a class="nav-link text-dark btn btn-outline-primary btn-sm" asp-area="" asp-controller="Home" asp-action="index" asp-route-CId="@item.Id">Mayoreo</a>
-
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaCreacion)
                 </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaInicioPeriodo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaFinalPeriodo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empresa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Apellidos)
+                </td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <a class="btn btn-outline-dark btn-sm" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                        <a class="btn btn-outline-dark btn-sm" asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                        <a class="btn btn-outline-dark btn-sm" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="AsientoContables" asp-action="Index" asp-route-id="@item.Id">Asientos</a>
+                        <a class="btn btn-outline-primary btn-sm" asp-area="" asp-controller="Home" asp-action="index" asp-route-CId="@item.Id">Mayoreo</a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

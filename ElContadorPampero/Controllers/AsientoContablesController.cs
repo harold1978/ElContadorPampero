@@ -58,8 +58,9 @@ namespace ElContadorPampero.Controllers
             var asientoContable = await _context.AsientoContables
                 .Include(a => a.Contabilidad)
                 .Include(a => a.Usuario)
-                .Where(idu => idu.ContabilidadId == id && idu.UsuarioId == _usuario.GetUsuarioId())
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(a => a.DetalleAsientoContables).ThenInclude(a=>a.CuentaContable)
+                .FirstOrDefaultAsync(idu => idu.Id == id);
+                
             if (asientoContable == null)
             {
                 return NotFound();

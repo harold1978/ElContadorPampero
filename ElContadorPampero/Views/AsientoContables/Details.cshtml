@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Details";
+    decimal td = 0;
+    decimal th = 0;
 }
 
 <h1>Details</h1>
@@ -9,38 +11,71 @@
 <div>
     <h4>AsientoContable</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Detalle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Detalle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NroAsiento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NroAsiento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Contabilidad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Contabilidad.Empresa)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.Apellidos)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+
+                <div class="card-header">
+                    @Html.DisplayNameFor(model => model.Fecha):
+
+                    @Html.DisplayFor(model => model.Fecha)
+
+                    <br />
+
+                    @Html.DisplayNameFor(model => model.Detalle):
+
+                    @Html.DisplayFor(model => model.Detalle)
+                </div>
+                <div class="card-body">
+                    @Html.DisplayNameFor(model => model.NroAsiento):
+
+                    @Html.DisplayFor(model => model.NroAsiento)
+                    <br />
+                    @Html.DisplayNameFor(model => model.Contabilidad):
+
+                    @Html.DisplayFor(model => model.Contabilidad.Empresa)
+                    <br />
+                    @Html.DisplayNameFor(model => model.Usuario):
+
+                    @Html.DisplayFor(model => model.Usuario.Apellidos)
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+
+            <h5>MOVIMIENTOS DEL ASIENTO</h5>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>CORREO USUARIO</th>
+                        <th>CUENTA</th>
+                        <th>DEBE</th>
+                        <th>HABER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.DetalleAsientoContables)
+                    {
+                        <tr>
+                            <td>@Model.Usuario.Email</td>
+                            <td>@item.CuentaContable.Nombre</td>
+                            <td>@(item.Cargo == "Debe" ? item.Monto : 0)</td>
+                            <td>@(item.Cargo == "Haber" ? item.Monto : 0)</td>
+                        </tr>
+                        td += item.Cargo == "Debe" ? item.Monto : 0;
+                        th += item.Cargo == "Haber" ? item.Monto : 0;
+                    }
+                    <tr class="@(td==th?"bg-primary":"bg-danger")">
+                        <td colspan="2"></td>
+                        <td>@td</td>
+                        <td>@th</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
